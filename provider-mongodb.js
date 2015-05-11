@@ -11,19 +11,19 @@ Provider = function(host, port) {
 
 
 Provider.prototype.getCollection= function(callback) {
-  this.db.collection('articles', function(error, article_collection) {
+  this.db.collection('collaborateurs', function(error, collab_collection) {
     if( error ) callback(error);
-    else callback(null, article_collection);
+    else callback(null, collab_collection);
   });
 };
 
 Provider.prototype.findAll = function(callback) {
-    this.getCollection(function(error, article_collection) {
-      if( error ) callback(error)
+    this.getCollection(function(error, collab_collection) {
+      if( error ) callback(error);
       else {
-        article_collection.find().toArray(function(error, results) {
-          if( error ) callback(error)
-          else callback(null, results)
+        collab_collection.find().toArray(function(error, results) {
+          if( error ) callback(error);
+          else callback(null, results);
         });
       }
     });
@@ -31,32 +31,32 @@ Provider.prototype.findAll = function(callback) {
 
 
 Provider.prototype.findById = function(id, callback) {
-    this.getCollection(function(error, article_collection) {
-      if( error ) callback(error)
+    this.getCollection(function(error, collab_collection) {
+      if( error ) callback(error);
       else {
       	//var BSON = require('mongodb').BSONPure;
       	//var obj_id = BSON.ObjectID.createFromHexString(id);
       	
-         article_collection.findOne({_id: new require('mongodb').ObjectID(id) }, function(error, result) {
-		//	article_collection.findOne({_id: obj_id }, function(error, result) {
+         collab_collection.findOne({_id: new require('mongodb').ObjectID(id) }, function(error, result) {
+		//	collab_collection.findOne({_id: obj_id }, function(error, result) {
           
-          if( error ) callback(error)
-          else callback(null, result)
+          if( error ) callback(error);
+          else callback(null, result);
         });
       }
     });
 };
 
 Provider.prototype.addCommentToArticle = function(articleId, comment, callback) {
-  this.getCollection(function(error, article_collection) {
+  this.getCollection(function(error, collab_collection) {
     if( error ) callback( error );
     else {
-      article_collection.update(
+      collab_collection.update(
         {_id: new require('mongodb').ObjectID(articleId)},
         {"$push": {comments: comment}},
         function(error, article){
           if( error ) callback(error);
-          else callback(null, article)
+          else callback(null, article);
         });
     }
   });
@@ -64,8 +64,8 @@ Provider.prototype.addCommentToArticle = function(articleId, comment, callback) 
 
 
 Provider.prototype.save = function(articles, callback) {
-    this.getCollection(function(error, article_collection) {
-      if( error ) callback(error)
+    this.getCollection(function(error, collab_collection) {
+      if( error ) callback(error);
       else {
         if( typeof(articles.length)=="undefined")
           articles = [articles];
@@ -79,7 +79,7 @@ Provider.prototype.save = function(articles, callback) {
           }
         }
 
-        article_collection.insert(articles, function() {
+        collab_collection.insert(articles, function() {
           callback(null, articles);
         });
       }

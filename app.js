@@ -2,14 +2,35 @@ var express = require('express');
 var Provider = require('./provider-mongodb').Provider;
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var logger = require('morgan');
 
 var app = express();
 
 app.set('title', 'Application Title');
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'jade');
-  app.use(bodyParser);
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
+
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
   
+
+// On définit notre fichier de routes.  
+var collaborateurs = require('./routes/collaborateurs');
+//on utilise notre provider
+var provider = new Provider('localhost', 27017);
+
+// on le définit pour l'utiliser dans l'ensemble du projet 
+app.use(function(req,res, next) {
+  req.provider = provider;
+  next();
+});
+
+app.use('/collaborateurs', collaborateurs);
+
+
 // error handlers
 
 // development error handler
@@ -32,56 +53,6 @@ app.use(function(err, req, res, next) {
     message: err.message,
     error: {}
   });
-});
-
-var provider = new Provider('localhost', 27017);
-
-// Routes
-
-app.get('/', function(req, res) {
-			res.render('index.jade', { 
-            locals: {
-                title: 'Application de Gestion',
-            }
-        });
-});
-
-app.get('/collaborateurs', function(req, res){
-    provider.findAll( function(error,cbs){
-        res.render('collaborateurs.jade', { 
-            locals: {
-                title: 'Collaborateurs',
-                listeCollaborateurs:cbs
-            }
-        });
-    })
-});
-
-app.get('/collaborateurs/new', function(req, res) {
-    res.render('collaborateurs_new.jade', { locals: {
-        title: 'New Collaborateur'
-    }
-    });
-});
-
-app.post('/collaborateurs/new', function(req, res){
-    provider.save({
-        title: req.param('title'),
-        body: req.param('body')
-    }, function( error, docs) {
-        res.redirect('/')
-    });
-});
-
-app.get('/collaborateurs/:id', function(req, res) {
-    articleProvider.findById(req.params.id, function(error, article) {
-        res.render('blog_show.jade',
-        { locals: {
-            title: article.title,
-            article:article
-        }
-        });
-    });
 });
 
 
