@@ -1,0 +1,11 @@
+= Rapport de projet de gestion de personnel en nodeJS + mongodb
+
+== Insertion dans la collection
+
+on a généré à l'aide du site http://www.generatedata.com/ des données en entrée. On les inséré dans la base en utilisant la commande suivante:
+
+[source,console]
+----
+mongoimport --jsonArray --db gestion --collection collaborateurs --file data.json
+----
+

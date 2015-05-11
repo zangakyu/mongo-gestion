@@ -1,0 +1,3 @@
+= gestion-mongo
+
+gestion-mongo est un exercice durant le cours de NOSQL de l'IUT LYON1. Il vise à créer une application de gestion du personnel d'une entreprise X.
