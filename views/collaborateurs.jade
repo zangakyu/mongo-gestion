@@ -1,0 +1,12 @@
+div.header 
+  h2(class="headerText")
+    a(href="/") My Ugly Blog
+div.newArticle
+  a(href="/blog/new") Nouvel Article
+#articles
+    - each article in articles
+      div.article
+        div.created_at= article.created_at
+        div.title  
+            a(href="/blog/"+article._id.toHexString())!= article.title
+        div.body= article.body
