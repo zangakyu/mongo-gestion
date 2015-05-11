@@ -1,4 +1,5 @@
 var express = require('express');
+var path = require('path');
 var Provider = require('./provider-mongodb').Provider;
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -54,6 +55,4 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
-
-app.listen(3000);
+module.exports = app;
